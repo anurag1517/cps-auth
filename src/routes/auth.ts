@@ -83,5 +83,8 @@ router.post("/register", async (req, res) => {
     return;
   }
 });
+router.get("/test", (req, res) => {
+  res.json({ message: "CORS test working!" });
+});
 
 export default router;

@@ -9,7 +9,6 @@ import connectDB from "./config/db";
 dotenv.config();
 
 const app = express();
-const PORT = 5000;
 app.use(cors({
   origin: "https://cps2-rust.vercel.app",
   credentials: true,

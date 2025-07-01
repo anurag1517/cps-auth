@@ -29,8 +29,4 @@ app.use(bodyParser.json());
 app.use('/api', authRoutes);
 
 connectDB(); // before app.listen
-app.listen(PORT, () => {
-  console.log(`Server running`);
-});
-
 export default app;

@@ -10,7 +10,6 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS middleware — MUST be before routes
 app.use(cors({
   origin: "https://cps2-rust.vercel.app",
   credentials: true,
@@ -18,7 +17,6 @@ app.use(cors({
 
 app.use(bodyParser.json());
 
-// ✅ Your routes
 app.use("/api", authRoutes);
 
 connectDB();

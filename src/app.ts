@@ -24,7 +24,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",  // for local dev
-      "https://cps2-rust.vercel.app", // your deployed frontend
+      "https://cps2-rust.vercel.app/api/login", // your deployed frontend
     ],
     credentials: true,
   })

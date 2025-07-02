@@ -96,7 +96,7 @@ import User from "../models/users";
 // Middleware for CORS and JSON parsing
 router.use((req, res, next) => {
   // Configure allowed origins properly in production!
-  res.setHeader('Access-Control-Allow-Origin', ['https://cps2-rust.vercel.app/api/login', 'https://cps2-rust.vercel.app/api/register']);
+  res.setHeader('Access-Control-Allow-Origin', 'https://cps2-rust.vercel.app');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   

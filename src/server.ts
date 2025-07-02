@@ -5,7 +5,7 @@ import authRouter from './api/auth';
 
 const app = express();
 
-// ✅ CORS setup
+// CORS setup
 const allowedOrigins = ['https://cps2-rust.vercel.app', 'http://localhost:5173'];
 
 app.use(
@@ -24,14 +24,14 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ MongoDB connect
+// MongoDB connect
 connectDB().catch((err) => {
   console.error('❌ MongoDB connection error:', err);
   process.exit(1);
 });
 
-// ✅ Routes
+// Routes
 app.use('/api', authRouter);
 
-// ✅ Export the Express app for Vercel
+// Export the Express app for Vercel
 export default app;

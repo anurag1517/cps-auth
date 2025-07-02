@@ -97,6 +97,7 @@ import User from "../models/users";
 router.use((req, res, next) => {
   // Configure allowed origins properly in production!
   res.setHeader('Access-Control-Allow-Origin', 'https://cps2-rust.vercel.app');
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   

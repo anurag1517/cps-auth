@@ -117,30 +117,33 @@ import User from "../models/users";
 
 // POST /api/login
 router.post("/login", async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    res.status(400).json({ error: "Username and password are required." });
-    return;
-  }
-
   try {
-    const user = await User.findOne({ username }).select('+password').lean();
+    console.log("LOGIN attempt - body:", req.body);
 
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      console.warn("Missing username or password");
+      res.status(400).json({ error: "Username and password are required." });
+      return;
+    }
+
+    const user = await User.findOne({ username }).select('+password').lean();
     if (!user) {
+      console.warn("User not found:", username);
       res.status(404).json({ error: "User not found." });
       return;
     }
 
-    // Verify password with bcrypt
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.warn("Invalid password for:", username);
       res.status(401).json({ error: "Invalid credentials." });
       return;
     }
 
-    // Remove password from response
     const { password: _, ...userData } = user;
+    console.log("Login successful for:", username);
 
     res.status(200).json({
       message: "Login successful",
@@ -153,6 +156,7 @@ router.post("/login", async (req: Request, res: Response) => {
     return;
   }
 });
+
 
 // POST /api/register
 router.post("/register", async (req: Request, res: Response) => {

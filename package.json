@@ -159,8 +159,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --loader ts-node/esm src/app.ts",
-    "build": "tsc"
+    "dev": "tsc && node src/server.js",
+    "build": "tsc",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -177,7 +178,8 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.0.8",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.10",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }

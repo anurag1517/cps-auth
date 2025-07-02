@@ -93,27 +93,28 @@ const router = express.Router();
 import bcrypt from 'bcryptjs';
 import User from "../models/users";
 
-// Middleware for CORS and JSON parsing
-// router.use((req, res, next) => {
-//   // Configure allowed origins properly in production!
-//   res.setHeader('Access-Control-Allow-Origin', 'https://cps2-rust.vercel.app');
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
-//   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+router.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://cps2-rust.vercel.app',
+    'http://localhost:5000' // Add other environments as needed
+  ];
   
-//   // Handle preflight requests
-//   if (req.method === 'OPTIONS') {
-//     res.sendStatus(200);
-//     return;
-//   }
+  const origin = req.headers.origin || '';
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   
-//   // Only parse JSON for POST requests
-//   if (req.method === 'POST') {
-//     express.json()(req, res, next);
-//   } else {
-//     next();
-//   }
-// });
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+    return;
+  }
+  
+  next();
+});
 
 // POST /api/login
 router.post("/login", async (req: Request, res: Response) => {

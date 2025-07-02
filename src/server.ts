@@ -1,37 +1,28 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import express from 'express';
 import connectDB from './config/db';
 import authRouter from './api/auth';
 
 const app = express();
+const port = 5000;
 
-// CORS setup
-const allowedOrigins = ['https://cps2-rust.vercel.app', 'http://localhost:5173'];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-  })
-);
-
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connect
-connectDB().catch((err) => {
-  console.error('❌ MongoDB connection error:', err);
+// Database connection
+connectDB().catch(err => {
+  console.error("❌ Database connection failed", err);
   process.exit(1);
 });
 
 // Routes
 app.use('/api', authRouter);
 
-// Export the Express app for Vercel
+// Start server only in local development
+// if (process.env.NODE_ENV !== 'production') {
+//   app.listen(port, () => {
+//     console.log(`🚀 Auth service running at http://localhost:${port}`);
+//   });
+// }
+
 export default app;

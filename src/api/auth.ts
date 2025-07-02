@@ -94,26 +94,26 @@ import bcrypt from 'bcryptjs';
 import User from "../models/users";
 
 // Middleware for CORS and JSON parsing
-router.use((req, res, next) => {
-  // Configure allowed origins properly in production!
-  res.setHeader('Access-Control-Allow-Origin', 'https://cps2-rust.vercel.app');
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+// router.use((req, res, next) => {
+//   // Configure allowed origins properly in production!
+//   res.setHeader('Access-Control-Allow-Origin', 'https://cps2-rust.vercel.app');
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-    return;
-  }
+//   // Handle preflight requests
+//   if (req.method === 'OPTIONS') {
+//     res.sendStatus(200);
+//     return;
+//   }
   
-  // Only parse JSON for POST requests
-  if (req.method === 'POST') {
-    express.json()(req, res, next);
-  } else {
-    next();
-  }
-});
+//   // Only parse JSON for POST requests
+//   if (req.method === 'POST') {
+//     express.json()(req, res, next);
+//   } else {
+//     next();
+//   }
+// });
 
 // POST /api/login
 router.post("/login", async (req: Request, res: Response) => {

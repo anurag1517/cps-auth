@@ -82,6 +82,9 @@
 
 import mongoose from "mongoose";
 
+import dotenv from "dotenv";
+
+dotenv.config(); // ✅ load .env file
 // Serverless connection caching
 declare global {
   var mongooseCache: {
@@ -94,7 +97,7 @@ const mongooseCache = global.mongooseCache || { conn: null, promise: null };
 
 const connectDB = async () => {
   // Move environment variable check inside function
-  const uri = process.env.MONGO_URI;
+  const uri = "mongodb+srv://akssrf2025:Aks1234@cluster0.vg4zbcx.mongodb.net/LearnFlowDB?retryWrites=true&w=majority&appName=Cluster0";
   if (!uri) {
     throw new Error("❌ MONGO_URI environment variable not defined");
   }

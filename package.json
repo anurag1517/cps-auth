@@ -159,7 +159,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsc && node src/server.js",
+    "dev": "npx ts-node src/server.ts",
     "build": "tsc",
     "start": "node src/server.js"
   },
@@ -177,6 +177,7 @@
   "homepage": "https://github.com/anurag1517/cps-auth#readme",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.10",

@@ -93,28 +93,28 @@ const router = express.Router();
 import bcrypt from 'bcryptjs';
 import User from "../models/users";
 
-router.use((req, res, next) => {
-  const allowedOrigins = [
-    'https://cps2-rust.vercel.app',
-    'http://localhost:5000' // Add other environments as needed
-  ];
+// router.use((req, res, next) => {
+//   const allowedOrigins = [
+//     'https://cps2-rust.vercel.app',
+//     'https://localhost:5173'
+//   ];
   
-  const origin = req.headers.origin || '';
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+//   const origin = req.headers.origin || '';
+//   if (allowedOrigins.includes(origin)) {
+//     res.setHeader('Access-Control-Allow-Origin', origin);
+//   }
   
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.setHeader('Access-Control-Allow-Credentials', 'true');
+//   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-    return;
-  }
+//   if (req.method === 'OPTIONS') {
+//     res.sendStatus(200);
+//     return;
+//   }
   
-  next();
-});
+//   next();
+// });
 
 // POST /api/login
 router.post("/login", async (req: Request, res: Response) => {
@@ -179,7 +179,8 @@ router.post("/register", async (req: Request, res: Response) => {
     // Hash password before saving
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
+    console.log("Hashed password for:", username);
+    
     const newUser = new User({
       name,
       username,

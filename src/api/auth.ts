@@ -92,6 +92,8 @@ import express, { Request, Response } from 'express';
 const router = express.Router();
 import bcrypt from 'bcryptjs';
 import User from "../models/users";
+import mongoose from 'mongoose';
+import connectDB from '../config/db';
 
 // router.use((req, res, next) => {
 //   const allowedOrigins = [
@@ -115,7 +117,24 @@ import User from "../models/users";
   
 //   next();
 // });
-
+router.use(async (req, res, next) => {
+  try {
+    // Establish DB connection
+    const db = await connectDB();
+    
+    // Verify connection state
+    if (db.connection.readyState !== 1) {
+      console.error('DB connection not ready. State:', db.connection.readyState);
+      res.status(503).json({ error: "Database is initializing" });
+      return;
+    }
+    
+    next();
+  } catch (err) {
+    console.error('Database connection error:', err);
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
 // POST /api/login
 router.post("/login", async (req: Request, res: Response) => {
   try {
@@ -128,7 +147,11 @@ router.post("/login", async (req: Request, res: Response) => {
       res.status(400).json({ error: "Username and password are required." });
       return;
     }
-
+    if (mongoose.connection.readyState !== 1) {
+      console.warn('DB connection not ready during login. State:', mongoose.connection.readyState);
+      res.status(503).json({ error: "Database is initializing. Please retry." });
+      return;
+    }
     const user = await User.findOne({ username }).select('+password').lean();
     if (!user) {
       console.warn("User not found:", username);
@@ -167,7 +190,11 @@ router.post("/register", async (req: Request, res: Response) => {
     res.status(400).json({ error: "Missing required fields." });
     return;
   }
-
+  if (mongoose.connection.readyState !== 1) {
+      console.warn('DB connection not ready during registration. State:', mongoose.connection.readyState);
+      res.status(503).json({ error: "Database is initializing. Please retry." });
+      return;
+    }
   try {
     // Check for existing user
     const existingUser = await User.findOne({ username });

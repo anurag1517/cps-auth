@@ -94,6 +94,8 @@ import bcrypt from 'bcryptjs';
 import User from "../models/users";
 import mongoose from 'mongoose';
 import connectDB from '../config/db';
+import EducatorID from "../models/EducatorId"; // import EID model
+
 
 // router.use((req, res, next) => {
 //   const allowedOrigins = [
@@ -184,61 +186,75 @@ router.post("/login", async (req: Request, res: Response) => {
 
 // POST /api/register
 router.post("/register", async (req: Request, res: Response) => {
-  const { name, username, password, email, progress } = req.body;
+  const { name, username,role, password, email, progress, eid } = req.body;
 
   if (!name || !username || !password) {
     res.status(400).json({ error: "Missing required fields." });
     return;
   }
-  if (mongoose.connection.readyState !== 1) {
-      console.warn('DB connection not ready during registration. State:', mongoose.connection.readyState);
-      res.status(503).json({ error: "Database is initializing. Please retry." });
+
+ 
+
+  if (role === "educator") {
+    if (!eid || !/^\d{16}$/.test(eid)) {
+      res.status(400).json({ error: "Invalid Educator ID." });
       return;
     }
+
+    // Check if EID exists and is unused
+    const validEid = await EducatorID.findOne({ eid, used: false });
+    if (!validEid) {
+      res.status(403).json({ error: "Educator ID is invalid or already used." });
+      return;
+    }
+  }
+
+   if (mongoose.connection.readyState !== 1) {
+    res.status(503).json({ error: "Database is initializing. Please retry." });
+    return;
+  }
+
   try {
-    // Check for existing user
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       res.status(409).json({ error: "Username already exists." });
       return;
     }
 
-    // Hash password before saving
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log("Hashed password for:", username);
-    
+
     const newUser = new User({
       name,
       username,
       password: hashedPassword,
       email: email || undefined,
+      role,
       progress: progress || {},
       mastery: {},
-      recommendations: []
+      recommendations: [],
     });
 
     await newUser.save();
 
-    // Remove password from response
-    const { password: _, ...userData } = newUser.toObject();
+     if (role === "educator") {
+      await EducatorID.updateOne({ eid }, { $set: { used: true } });
+    }
 
-    res.status(201).json({ 
-      message: "User registered.", 
-      user: userData 
+    const { password: _, ...userData } = newUser.toObject();
+    
+
+    res.status(201).json({
+      message: `${role.charAt(0).toUpperCase() + role.slice(1)} registered successfully.`,
+      user: userData,
     });
     return;
   } catch (err) {
     console.error("Registration error:", err);
     res.status(500).json({ error: "Internal server error." });
-    return;
   }
-});
-
-// GET /api/test
-router.get("/test", (req: Request, res: Response) => {
-  res.json({ message: "CORS test working!" });
   return;
 });
+
 
 export default router;
